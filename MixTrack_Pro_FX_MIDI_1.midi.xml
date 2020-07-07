@@ -1,29 +1,23 @@
 <?xml version='1.0' encoding='utf-8'?>
-<MixxxControllerPreset mixxxVersion="" schemaVersion="1">
-    <info>
-        <name>Numark MixTrack Pro FX</name>
-        <author>bad1dea5</author>
-        <description>MIDI Mapping for Numark Mixtrack Pro FX</description>
-    </info>
-    <controller id="MixTrack">
-        <scriptfiles>
-            <file filename="lodash.mixxx.js" functionprefix=""/>
-            <file filename="midi-components-0.0.js" functionprefix=""/>
-            <file filename="Numark-Mixtrack-Pro-FX-scripts.js" functionprefix="MixtrackProFX"/>
-        </scriptfiles>
-        <controls>
-            <control>
-				<group>[Master]</group>
-				<key>crossfader</key>
-				<status>0xBF</status>
-				<midino>0x08</midino>
-				<options>
-					<normal/>
-				</options>
-			</control>
+<MixxxControllerPreset schemaVersion="1" mixxxVersion="2.1.0+">
+	<info>
+		<name>Numark MixTrack Pro FX</name>
+		<author>bad1dea5</author>
+		<description>Basic mapping for the Numark MixTrack Pro FX</description>
+		<forums>https://mixxx.discourse.group/t/numark-mixtrack-pro-fx/19561</forums>
+		<wiki></wiki>
+	</info>
+	<controller id="MixTrackFx">
+		<scriptfiles>
+			<file filename="lodash.mixxx.js"/>
+			<file filename="midi-components-0.0.js"/>
+			<file filename="Numark-Mixtrack-Pro-FX-scripts.js" functionprefix="MixtrackProFX"/>
+		</scriptfiles>
+		<controls>
 			<control>
 				<group>[Master]</group>
-				<key>volume</key>
+				<key>gain</key>
+				<description>Master gain</description>
 				<status>0xBE</status>
 				<midino>0x23</midino>
 				<options>
@@ -32,11 +26,11 @@
 			</control>
 			<control>
 				<group>[Master]</group>
-				<key>MixtrackProFX.headGainMaster.input</key>
-				<status>0xBE</status>
-				<midino>0x2F</midino>
+				<key>crossfader</key>
+				<status>0xBF</status>
+				<midino>0x08</midino>
 				<options>
-					<script-binding/>
+					<normal/>
 				</options>
 			</control>
 			<control>
@@ -49,6 +43,16 @@
 				</options>
 			</control>
 			<control>
+				<group>[Master]</group>
+				<key>MixtrackProFX.headphones.gain.input</key>
+				<status>0xBE</status>
+				<midino>0x2F</midino>
+				<options>
+					<script-binding/>
+				</options>
+			</control>
+			<!-- library -->
+			<control>
 				<group>[Library]</group>
 				<key>MixtrackProFX.browse.knob.input</key>
 				<status>0xBF</status>
@@ -57,23 +61,23 @@
 					<script-binding/>
 				</options>
 			</control>
-			<!-- channel 1 -->
 			<control>
-				<group>[Channel1]</group>
-				<key>MixtrackProFX.deck[1].shiftButton.input</key>
-				<status>0x90</status>
-				<midino>0x20</midino>
+				<group>[Library]</group>
+				<key>MixtrackProFX.browse.button.input</key>
+				<status>0x9F</status>
+				<midino>0x07</midino>
 				<options>
-					<script-binding />
+					<script-binding/>
 				</options>
 			</control>
+			<!-- channel1 -->
 			<control>
 				<group>[Channel1]</group>
-				<key>MixtrackProFX.deck[1].shiftButton.input</key>
-				<status>0x80</status>
-				<midino>0x20</midino>
+				<key>MixtrackProFX.deck[1].loadButton.input</key>
+				<status>0x9F</status>
+				<midino>0x02</midino>
 				<options>
-					<script-binding />
+					<script-binding/>
 				</options>
 			</control>
 			<control>
@@ -96,29 +100,11 @@
 			</control>
 			<control>
 				<group>[Channel1]</group>
-				<key>MixtrackProFX.deck[1].loadButton.input</key>
-				<status>0x9F</status>
-				<midino>0x02</midino>
-				<options>
-					<script-binding/>
-				</options>
-			</control>
-			<control>
-				<group>[Channel1]</group>
 				<key>MixtrackProFX.deck[1].playButton.input</key>
 				<status>0x90</status>
 				<midino>0x00</midino>
 				<options>
 					<script-binding/>
-				</options>
-			</control>
-			<control>
-				<group>[Channel1]</group>
-				<key>volume</key>
-				<status>0xB0</status>
-				<midino>0x1C</midino>
-				<options>
-					<normal/>
 				</options>
 			</control>
 			<control>
@@ -131,15 +117,96 @@
 				</options>
 			</control>
 			<control>
-				<group>[Channel1]</group>
-				<key>MixtrackProFX.wheelTouch</key>
+                <group>[Channel1]</group>
+                <key>MixtrackProFX.deck[1].volume.input</key>
+                <status>0xB0</status>
+                <midino>0x1C</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[EqualizerRack1_[Channel1]_Effect1]</group>
+                <key>MixtrackProFX.deck[1].treble.input</key>
+                <status>0xB0</status>
+                <midino>0x17</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[EqualizerRack1_[Channel1]_Effect1]</group>
+                <key>MixtrackProFX.deck[1].mid.input</key>
+                <status>0xB0</status>
+                <midino>0x18</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[EqualizerRack1_[Channel1]_Effect1]</group>
+                <key>MixtrackProFX.deck[1].bass.input</key>
+                <status>0xB0</status>
+                <midino>0x19</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel1]</group>
+                <key>MixtrackProFX.deck[1].gain.input</key>
+                <status>0xB0</status>
+                <midino>0x16</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+			<control>
+				<group>[QuickEffectRack1_[Channel1]]</group>
+				<key>MixtrackProFX.deck[1].filter.input</key>
 				<status>0xB0</status>
-				<midino>0x06</midino>
+				<midino>0x1A</midino>
 				<options>
 					<script-binding/>
 				</options>
 			</control>
 			<control>
+				<group>[Channel1]</group>
+				<key>MixtrackProFX.deck[1].hotcue[1].input</key>
+				<status>0x94</status>
+				<midino>0x14</midino>
+				<options>
+					<script-binding/>
+				</options>
+            </control>
+            <control>
+				<group>[Channel1]</group>
+				<key>MixtrackProFX.deck[1].hotcue[2].input</key>
+				<status>0x94</status>
+				<midino>0x15</midino>
+				<options>
+					<script-binding/>
+				</options>
+            </control>
+            <control>
+				<group>[Channel1]</group>
+				<key>MixtrackProFX.deck[1].hotcue[3].input</key>
+				<status>0x94</status>
+				<midino>0x16</midino>
+				<options>
+					<script-binding/>
+				</options>
+            </control>
+            <control>
+				<group>[Channel1]</group>
+				<key>MixtrackProFX.deck[1].hotcue[4].input</key>
+				<status>0x94</status>
+				<midino>0x17</midino>
+				<options>
+					<script-binding/>
+				</options>
+            </control>
+            <control>
 				<group>[Channel1]</group>
 				<key>MixtrackProFX.deck[1].pitch.inputMSB</key>
 				<status>0xB0</status>
@@ -158,94 +225,58 @@
 				</options>
 			</control>
 			<control>
-                <group>[EqualizerRack1_[Channel1]_Effect1]</group>
-                <key>MixtrackProFX.deck[1].eqTreble.input</key>
-                <status>0xB0</status>
-                <midino>0x17</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[EqualizerRack1_[Channel1]_Effect1]</group>
-                <key>MixtrackProFX.deck[1].eqMid.input</key>
-                <status>0xB0</status>
-                <midino>0x18</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[EqualizerRack1_[Channel1]_Effect1]</group>
-                <key>MixtrackProFX.deck[1].eqBass.input</key>
-                <status>0xB0</status>
-                <midino>0x19</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
 				<group>[Channel1]</group>
-				<key>MixtrackProFX.deck[1].hotcues[1].input</key>
-				<status>0x94</status>
-				<midino>0x14</midino>
-				<options>
-					<script-binding/>
-				</options>
-            </control>
-            <control>
-				<group>[Channel1]</group>
-				<key>MixtrackProFX.deck[1].hotcues[2].input</key>
-				<status>0x94</status>
-				<midino>0x15</midino>
-				<options>
-					<script-binding/>
-				</options>
-            </control>
-            <control>
-				<group>[Channel1]</group>
-				<key>MixtrackProFX.deck[1].hotcues[3].input</key>
-				<status>0x94</status>
-				<midino>0x16</midino>
-				<options>
-					<script-binding/>
-				</options>
-            </control>
-            <control>
-				<group>[Channel1]</group>
-				<key>MixtrackProFX.deck[1].hotcues[4].input</key>
-				<status>0x94</status>
-				<midino>0x17</midino>
-				<options>
-					<script-binding/>
-				</options>
-            </control>
-            <control>
-                <group>[QuickEffectRack1_[Channel1]]</group>
-                <key>MixtrackProFX.deck[1].filter.input</key>
-                <status>0xB0</status>
-                <midino>0x16</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-			<!-- channel 2 -->
-			<control>
-				<group>[Channel2]</group>
-				<key>MixtrackProFX.deck[2].shiftButton.input</key>
-				<status>0x91</status>
+				<key>MixtrackProFX.deck[1].shiftButton.input</key>
+				<status>0x90</status>
 				<midino>0x20</midino>
 				<options>
 					<script-binding />
 				</options>
 			</control>
 			<control>
-				<group>[Channel2]</group>
-				<key>MixtrackProFX.deck[2].shiftButton.input</key>
-				<status>0x81</status>
+				<group>[Channel1]</group>
+				<key>MixtrackProFX.deck[1].shiftButton.input</key>
+				<status>0x80</status>
 				<midino>0x20</midino>
 				<options>
 					<script-binding />
+				</options>
+			</control>
+			<control>
+				<group>[Channel1]</group>
+				<key>MixtrackProFX.wheelTurn</key>
+				<status>0xB0</status>
+				<midino>0x06</midino>
+				<options>
+					<script-binding/>
+				</options>
+			</control>
+			<control>
+                <group>[Channel1]</group>
+                <key>MixtrackProFX.wheelTouch</key>
+                <status>0x90</status>
+                <midino>0x06</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+			<control>
+                <group>[Channel1]</group>
+                <key>MixtrackProFX.wheelToggle</key>
+                <status>0x90</status>
+                <midino>0x07</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+			<!-- channel2 -->
+			<control>
+				<group>[Channel2]</group>
+				<key>MixtrackProFX.deck[2].loadButton.input</key>
+				<status>0x9F</status>
+				<midino>0x03</midino>
+				<options>
+					<script-binding/>
 				</options>
 			</control>
 			<control>
@@ -268,29 +299,11 @@
 			</control>
 			<control>
 				<group>[Channel2]</group>
-				<key>MixtrackProFX.deck[2].loadButton.input</key>
-				<status>0x9F</status>
-				<midino>0x03</midino>
-				<options>
-					<script-binding/>
-				</options>
-			</control>
-			<control>
-				<group>[Channel2]</group>
 				<key>MixtrackProFX.deck[2].playButton.input</key>
 				<status>0x91</status>
 				<midino>0x00</midino>
 				<options>
 					<script-binding/>
-				</options>
-			</control>
-			<control>
-				<group>[Channel2]</group>
-				<key>volume</key>
-				<status>0xB1</status>
-				<midino>0x1C</midino>
-				<options>
-					<normal/>
 				</options>
 			</control>
 			<control>
@@ -303,15 +316,96 @@
 				</options>
 			</control>
 			<control>
-				<group>[Channel2]</group>
-				<key>MixtrackProFX.wheelTouch</key>
+                <group>[Channel2]</group>
+                <key>MixtrackProFX.deck[2].volume.input</key>
+                <status>0xB1</status>
+                <midino>0x1C</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[EqualizerRack1_[Channel2]_Effect1]</group>
+                <key>MixtrackProFX.deck[2].treble.input</key>
+                <status>0xB1</status>
+                <midino>0x17</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[EqualizerRack1_[Channel2]_Effect1]</group>
+                <key>MixtrackProFX.deck[2].mid.input</key>
+                <status>0xB1</status>
+                <midino>0x18</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[EqualizerRack1_[Channel2]_Effect1]</group>
+                <key>MixtrackProFX.deck[2].bass.input</key>
+                <status>0xB1</status>
+                <midino>0x19</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel2]</group>
+                <key>MixtrackProFX.deck[2].gain.input</key>
+                <status>0xB1</status>
+                <midino>0x16</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+			<control>
+				<group>[QuickEffectRack1_[Channel2]]</group>
+				<key>MixtrackProFX.deck[2].filter.input</key>
 				<status>0xB1</status>
-				<midino>0x06</midino>
+				<midino>0x1A</midino>
 				<options>
 					<script-binding/>
 				</options>
 			</control>
 			<control>
+				<group>[Channel2]</group>
+				<key>MixtrackProFX.deck[2].hotcue[1].input</key>
+				<status>0x95</status>
+				<midino>0x14</midino>
+				<options>
+					<script-binding/>
+				</options>
+            </control>
+            <control>
+				<group>[Channel2]</group>
+				<key>MixtrackProFX.deck[2].hotcue[2].input</key>
+				<status>0x95</status>
+				<midino>0x15</midino>
+				<options>
+					<script-binding/>
+				</options>
+            </control>
+            <control>
+				<group>[Channel2]</group>
+				<key>MixtrackProFX.deck[2].hotcue[3].input</key>
+				<status>0x95</status>
+				<midino>0x16</midino>
+				<options>
+					<script-binding/>
+				</options>
+            </control>
+            <control>
+				<group>[Channel2]</group>
+				<key>MixtrackProFX.deck[2].hotcue[4].input</key>
+				<status>0x95</status>
+				<midino>0x17</midino>
+				<options>
+					<script-binding/>
+				</options>
+            </control>
+            <control>
 				<group>[Channel2]</group>
 				<key>MixtrackProFX.deck[2].pitch.inputMSB</key>
 				<status>0xB1</status>
@@ -330,78 +424,51 @@
 				</options>
 			</control>
 			<control>
-                <group>[EqualizerRack1_[Channel2]_Effect1]</group>
-                <key>MixtrackProFX.deck[2].eqTreble.input</key>
-                <status>0xB1</status>
-                <midino>0x17</midino>
+				<group>[Channel2]</group>
+				<key>MixtrackProFX.deck[2].shiftButton.input</key>
+				<status>0x91</status>
+				<midino>0x20</midino>
+				<options>
+					<script-binding />
+				</options>
+			</control>
+			<control>
+				<group>[Channel2]</group>
+				<key>MixtrackProFX.deck[2].shiftButton.input</key>
+				<status>0x81</status>
+				<midino>0x20</midino>
+				<options>
+					<script-binding />
+				</options>
+			</control>
+			<control>
+				<group>[Channel2]</group>
+				<key>MixtrackProFX.wheelTurn</key>
+				<status>0xB1</status>
+				<midino>0x06</midino>
+				<options>
+					<script-binding/>
+				</options>
+			</control>
+			<control>
+                <group>[Channel2]</group>
+                <key>MixtrackProFX.wheelTouch</key>
+                <status>0x91</status>
+                <midino>0x06</midino>
                 <options>
                     <script-binding/>
                 </options>
             </control>
-            <control>
-                <group>[EqualizerRack1_[Channel2]_Effect1]</group>
-                <key>MixtrackProFX.deck[2].eqMid.input</key>
-                <status>0xB1</status>
-                <midino>0x18</midino>
+			<control>
+                <group>[Channel2]</group>
+                <key>MixtrackProFX.wheelToggle</key>
+                <status>0x91</status>
+                <midino>0x07</midino>
                 <options>
                     <script-binding/>
                 </options>
             </control>
-            <control>
-                <group>[EqualizerRack1_[Channel2]_Effect1]</group>
-                <key>MixtrackProFX.deck[2].eqBass.input</key>
-                <status>0xB1</status>
-                <midino>0x19</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-            <control>
-				<group>[Channel2]</group>
-				<key>MixtrackProFX.deck[2].hotcues[1].input</key>
-				<status>0x95</status>
-				<midino>0x14</midino>
-				<options>
-					<script-binding/>
-				</options>
-            </control>
-            <control>
-				<group>[Channel2]</group>
-				<key>MixtrackProFX.deck[2].hotcues[2].input</key>
-				<status>0x95</status>
-				<midino>0x15</midino>
-				<options>
-					<script-binding/>
-				</options>
-            </control>
-            <control>
-				<group>[Channel2]</group>
-				<key>MixtrackProFX.deck[2].hotcues[3].input</key>
-				<status>0x95</status>
-				<midino>0x16</midino>
-				<options>
-					<script-binding/>
-				</options>
-            </control>
-            <control>
-				<group>[Channel2]</group>
-				<key>MixtrackProFX.deck[2].hotcues[4].input</key>
-				<status>0x95</status>
-				<midino>0x17</midino>
-				<options>
-					<script-binding/>
-				</options>
-            </control>
-            <control>
-                <group>[QuickEffectRack1_[Channel2]]</group>
-                <key>MixtrackProFX.deck[2].filter.input</key>
-                <status>0xB1</status>
-                <midino>0x16</midino>
-                <options>
-                    <script-binding/>
-                </options>
-            </control>
-        </controls>
-        <outputs/>
-    </controller>
+		</controls>
+		<outputs/>
+	</controller>
 </MixxxControllerPreset>

@@ -71,14 +71,14 @@ MixtrackProFX.Deck = function(deckNumber, midiChannel){
 	
 	this.playButton = new components.PlayButton([0x90 + midiChannel, 0x00]);
 	this.cueButton = new components.CueButton([0x90 + midiChannel, 0x01]);
-    this.syncButton = new components.SyncButton([0x90 + midiChannel, 0x02]);
-    this.pflButton = new components.Button({
+	this.syncButton = new components.SyncButton([0x90 + midiChannel, 0x02]);
+	this.pflButton = new components.Button({
 		midi: [0x90 + midiChannel, 0x1B],
 		key: 'pfl',
 		type: components.Button.prototype.types.toggle,
-    });
-    
-    this.loadButton = new components.Button({
+	});
+	
+	this.loadButton = new components.Button({
 		inKey: 'LoadSelectedTrack',
 		shift: function(){
 			this.inKey = 'LoadSelectedTrackAndPlay';
@@ -87,22 +87,22 @@ MixtrackProFX.Deck = function(deckNumber, midiChannel){
 			this.inKey = 'LoadSelectedTrack';
 		},
 	});
-    
-    this.volume = new components.Pot({
-        midi: [0xB0 + midiChannel, 0x1c],
-        inKey: 'volume',
-    });
-    
-    this.EqEffect = function(group, in_key){
-        components.Pot.call(this, {
-            group: group,
-            inKey: in_key,
-        });
+	
+	this.volume = new components.Pot({
+		midi: [0xB0 + midiChannel, 0x1c],
+		inKey: 'volume',
+	});
+	
+	this.EqEffect = function(group, in_key){
+		components.Pot.call(this, {
+			group: group,
+			inKey: in_key,
+		});
 	};
 	this.EqEffect.prototype = new components.Pot();
 	
 	this.treble = new this.EqEffect('[EqualizerRack1_' + this.currentDeck + '_Effect1]', 'parameter3');
-    this.mid = new this.EqEffect('[EqualizerRack1_' + this.currentDeck + '_Effect1]', 'parameter2');
+	this.mid = new this.EqEffect('[EqualizerRack1_' + this.currentDeck + '_Effect1]', 'parameter2');
 	this.bass = new this.EqEffect('[EqualizerRack1_' + this.currentDeck + '_Effect1]', 'parameter1');
 	
 	this.filter = new this.EqEffect('[QuickEffectRack1_' + this.currentDeck + ']', 'super1', true);
@@ -136,8 +136,8 @@ MixtrackProFX.Deck = function(deckNumber, midiChannel){
 			}
 		},
 	});
-	    
-    this.reconnectComponents(function(component){
+		
+	this.reconnectComponents(function(component){
 		if(component.group === undefined){
 			component.group = this.currentDeck;
 		}
@@ -146,22 +146,22 @@ MixtrackProFX.Deck = function(deckNumber, midiChannel){
 MixtrackProFX.Deck.prototype = new components.Deck();
 
 MixtrackProFX.Browse = function(){
-    this.knob = new components.Encoder({
-        group: '[Library]',
-        inKey: 'Move',
-        input: function (channel, control, value, status, group) {
-            if (value === 1) {
-                engine.setParameter(this.group, this.inKey + 'Down', 1);
-            } else if (value === 127) {
-                engine.setParameter(this.group, this.inKey + 'Up', 1);
-            }
-        },
-    });
+	this.knob = new components.Encoder({
+		group: '[Library]',
+		inKey: 'Move',
+		input: function (channel, control, value, status, group) {
+			if (value === 1) {
+				engine.setParameter(this.group, this.inKey + 'Down', 1);
+			} else if (value === 127) {
+				engine.setParameter(this.group, this.inKey + 'Up', 1);
+			}
+		},
+	});
 
-    this.button = new components.Button({
-        group: '[Library]',
-        inKey: 'GoToItem',
-    });
+	this.button = new components.Button({
+		group: '[Library]',
+		inKey: 'GoToItem',
+	});
 };
 MixtrackProFX.Browse.prototype = new components.ComponentContainer();
 
@@ -199,16 +199,16 @@ MixtrackProFX.startScratchTimer = function(deck){
 	
 	MixtrackProFX.scratch_tick[deck] = 0;
 	MixtrackProFX.scratch_timer[deck] = engine.beginTimer(20, function(){
-        MixtrackProFX.scratchTimerCallback(deck);
-    });
+		MixtrackProFX.scratchTimerCallback(deck);
+	});
 };
 
 MixtrackProFX.stopScratchTimer = function(deck){
 	if(MixtrackProFX.scratch_timer[deck]){
-        engine.stopTimer(MixtrackProFX.scratch_timer[deck]);
-    }
-    
-    MixtrackProFX.scratch_timer[deck] = null;
+		engine.stopTimer(MixtrackProFX.scratch_timer[deck]);
+	}
+	
+	MixtrackProFX.scratch_timer[deck] = null;
 };
 
 MixtrackProFX.resetScratchTimer = function(deck, tick){
@@ -222,14 +222,14 @@ MixtrackProFX.resetScratchTimer = function(deck, tick){
 MixtrackProFX.scratchTimerCallback = function(deck){
 	if((MixtrackProFX.scratch_direction[deck]
 		&& Math.abs(MixtrackProFX.scratch_tick[deck]) > 2)
-        || (!MixtrackProFX.scratch_direction[deck]
-            && Math.abs(MixtrackProFX.scratch_tick[deck]) > 1))
-    {
-        MixtrackProFX.scratch_tick[deck] = 0;
-        return;
-    }
-    
-    MixtrackProFX.scratchDisable(deck);
+		|| (!MixtrackProFX.scratch_direction[deck]
+			&& Math.abs(MixtrackProFX.scratch_tick[deck]) > 1))
+	{
+		MixtrackProFX.scratch_tick[deck] = 0;
+		return;
+	}
+	
+	MixtrackProFX.scratchDisable(deck);
 };
 
 MixtrackProFX.scratchEnable = function(deck){
@@ -262,17 +262,17 @@ MixtrackProFX.wheelTurn = function(channel, control, value, status, group){
 	}
 	
 	var delta = Math.abs(MixtrackProFX.last_scratch_tick[deck] - value);
-    if (MixtrackProFX.scratch_direction[deck] !== null && MixtrackProFX.scratch_direction[deck] != direction && delta < 64) {
-        direction = !direction;
-    }
-    
-    if (direction) {
-        newValue = value;
-    } else {
-        newValue = value - 128;
-    }
-    
-    if(MixtrackProFX.searching[deck]){
+	if (MixtrackProFX.scratch_direction[deck] !== null && MixtrackProFX.scratch_direction[deck] != direction && delta < 64) {
+		direction = !direction;
+	}
+	
+	if (direction) {
+		newValue = value;
+	} else {
+		newValue = value - 128;
+	}
+	
+	if(MixtrackProFX.searching[deck]){
 		var position = engine.getValue(group, 'playposition');
 		
 		if(position <= 0){
@@ -300,25 +300,25 @@ MixtrackProFX.wheelTurn = function(channel, control, value, status, group){
 	}
 	
 	MixtrackProFX.last_scratch_tick[deck] = value;
-    MixtrackProFX.scratch_direction[deck] = direction;
-    MixtrackProFX.scratch_accumulator[deck] += Math.abs(newValue);
-    
-    //
-    //
-    //
-    if (engine.isScratching(deck)) {
-        engine.scratchTick(deck, newValue);
-        MixtrackProFX.resetScratchTimer(deck, newValue);
+	MixtrackProFX.scratch_direction[deck] = direction;
+	MixtrackProFX.scratch_accumulator[deck] += Math.abs(newValue);
+	
+	//
+	//
+	//
+	if (engine.isScratching(deck)) {
+		engine.scratchTick(deck, newValue);
+		MixtrackProFX.resetScratchTimer(deck, newValue);
 	}
 	else if(MixtrackProFX.shift){
 		if (MixtrackProFX.scratch_accumulator[deck] > 61) {
-            MixtrackProFX.scratch_accumulator[deck] -= 61;
-            if (direction) { // forward
-                engine.setParameter(group, 'beatjump_1_forward', 1);
-            } else {
-                engine.setParameter(group, 'beatjump_1_backward', 1);
-            }
-        }
+			MixtrackProFX.scratch_accumulator[deck] -= 61;
+			if (direction) { // forward
+				engine.setParameter(group, 'beatjump_1_forward', 1);
+			} else {
+				engine.setParameter(group, 'beatjump_1_backward', 1);
+			}
+		}
 	} else {
 		engine.setValue(group, 'jog', newValue * 0.1);
 	}

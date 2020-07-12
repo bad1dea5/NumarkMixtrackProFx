@@ -10,7 +10,7 @@ Numark Mixtrack Pro FX mapping for Mixxx 2.2.4
 3. Mic Gain
 4. Cue Mix
 5. Cue Gain
-6. ~~Master Output LEDs~~
+6. Master Output LEDs
 7. Load
 8. Pre-fader Level
 9. High EQ

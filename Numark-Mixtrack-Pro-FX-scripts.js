@@ -4,6 +4,9 @@
 
 var MixtrackProFX = {};
 
+//
+//	initialization
+//
 MixtrackProFX.init = function(id, debug){
 	//
 	MixtrackProFX.deck = new components.ComponentContainer();
@@ -11,69 +14,108 @@ MixtrackProFX.init = function(id, debug){
 	MixtrackProFX.deck[2] = new MixtrackProFX.Deck(2, 1);
 	
 	MixtrackProFX.browse = new MixtrackProFX.Browse();
-	MixtrackProFX.headphones = new MixtrackProFX.Headphone();
+	MixtrackProFX.headGain = new MixtrackProFX.HeadGain();
 	
 	//
-	var exitDemoSysex = [0xF0, 0x7e, 0x00, 0x06, 0x01, 0xF7];
+	var exitDemoSysex = [0xF0, 0x7E, 0x00, 0x06, 0x01, 0xF7];
 	midi.sendSysexMsg(exitDemoSysex, exitDemoSysex.length);
 	
 	//
 	var statusSysex = [0xF0, 0x00, 0x20, 0x7F, 0x03, 0x01, 0xF7];
 	midi.sendSysexMsg(statusSysex, statusSysex.length);
 	
-	// initialize channels
+	//	initialize channels
 	for(var i = 0; i < 2; i++){
-		// LEDS
-		midi.sendShortMsg(0x90 | i, 0x00, 0x04);
-		midi.sendShortMsg(0x90 | i, 0x01, 0x04);
-		midi.sendShortMsg(0x90 | i, 0x02, 0x04);
-		midi.sendShortMsg(0x90 | i, 0x07, 0x04);
-		midi.sendShortMsg(0x90 | i, 0x1B, 0x04);
+		//	LEDS
+		midi.sendShortMsg(0x90 | i, 0x00, 0x01);
+		midi.sendShortMsg(0x90 | i, 0x01, 0x01);
+		midi.sendShortMsg(0x90 | i, 0x02, 0x01);
+		midi.sendShortMsg(0x90 | i, 0x07, 0x01);
+		midi.sendShortMsg(0x90 | i, 0x1B, 0x01);
 		
-		midi.sendShortMsg(0x94 | i, 0x00, 0x04);
-		midi.sendShortMsg(0x94 | i, 0x0d, 0x04);
-		midi.sendShortMsg(0x94 | i, 0x07, 0x04);
-		midi.sendShortMsg(0x94 | i, 0x0b, 0x04);
-		midi.sendShortMsg(0x94 | i, 0x34, 0x04);
-		midi.sendShortMsg(0x94 | i, 0x35, 0x04);
-		midi.sendShortMsg(0x94 | i, 0x40, 0x04);
+		midi.sendShortMsg(0x94 | i, 0x00, 0x01);	//	Cue
+		midi.sendShortMsg(0x94 | i, 0x0D, 0x01);	//	Auto
+		midi.sendShortMsg(0x94 | i, 0x07, 0x01);	//	Fader
+		midi.sendShortMsg(0x94 | i, 0x0B, 0x01);	//	Sample
+		midi.sendShortMsg(0x94 | i, 0x34, 0x01);
+		midi.sendShortMsg(0x94 | i, 0x35, 0x01);
+		midi.sendShortMsg(0x94 | i, 0x40, 0x01);
 		
-		// wheel
+		//	wheel
 		MixtrackProFX.wheel[i] = true;
 	}
 	
 	//
-	midi.sendShortMsg(0x88, 0x00, 0x04);	// HPF
-	midi.sendShortMsg(0x88, 0x01, 0x04);	// LPF
-	midi.sendShortMsg(0x88, 0x02, 0x04);	// Flanger
-	midi.sendShortMsg(0x88, 0x09, 0x04);	// Tap
+	midi.sendShortMsg(0x88, 0x00, 0x01);	//	High Pass Filter
+	midi.sendShortMsg(0x88, 0x01, 0x01);	//	Low Pass Filter
+	midi.sendShortMsg(0x88, 0x02, 0x01);	//	Flanger
+	midi.sendShortMsg(0x88, 0x09, 0x01);	//	Tap
 	
-	midi.sendShortMsg(0x89, 0x03, 0x04);	// Echo
-	midi.sendShortMsg(0x89, 0x04, 0x04);	// Reverb
-	midi.sendShortMsg(0x89, 0x05, 0x04);	// Phaser
+	midi.sendShortMsg(0x89, 0x03, 0x01);	//	Echo
+	midi.sendShortMsg(0x89, 0x04, 0x01);	//	Reverb
+	midi.sendShortMsg(0x89, 0x05, 0x01);	//	Phaser
 	
-	// vumeters off
-	midi.sendShortMsg(0xb0, 0x1f, 0x00);
-	midi.sendShortMsg(0xb1, 0x1f, 0x00);
+	//	vumeters off
+	midi.sendShortMsg(0xB0, 0x1F, 0x00);
+	midi.sendShortMsg(0xB1, 0x1F, 0x00);
+	
+	//
+	engine.makeConnection("[Channel1]", "VuMeter", MixtrackProFX.vuCallback);
+    engine.makeConnection("[Channel2]", "VuMeter", MixtrackProFX.vuCallback);
 };
 
+//
+//	shutdown
+//
 MixtrackProFX.shutdown = function(){
-	//	shutdown message
 	var shutdownSysex = [0xF0, 0x00, 0x20, 0x7F, 0x02, 0xF7];
 	midi.sendSysexMsg(shutdownSysex, shutdownSysex.length);
 };
 
-MixtrackProFX.Deck = function(deckNumber, midiChannel){
+//
+//	deck
+//
+MixtrackProFX.Deck = function(number, channel){
 	//
-	components.Deck.call(this, deckNumber);
+	components.Deck.call(this, number);
 	
 	var instance = this;
 	
-	this.playButton = new components.PlayButton([0x90 + midiChannel, 0x00]);
-	this.cueButton = new components.CueButton([0x90 + midiChannel, 0x01]);
-	this.syncButton = new components.SyncButton([0x90 + midiChannel, 0x02]);
+	this.playButton = new components.PlayButton({
+		midi: [0x90 + channel, 0x00],
+		off: 0x01,
+		sendShifted: true,
+		shiftControl: true,
+		shiftOffset: 4,
+		unshift: function() {
+			components.PlayButton.prototype.unshift.call(this);
+            this.type = components.Button.prototype.types.toggle;
+		},
+		shift: function() {
+			this.inKey = 'play_stutter';
+            this.type = components.Button.prototype.types.push;
+		},
+	});
+	
+	this.cueButton = new components.CueButton({
+		midi: [0x90 + channel, 0x01],
+		off: 0x01,
+		sendShifted: true,
+		shiftControl: true,
+		shiftOffset: 4,
+	});
+	
+	this.syncButton = new components.SyncButton({
+		midi: [0x90 + channel, 0x02],
+		off: 0x01,
+		sendShifted: true,
+		shiftControl: true,
+		shiftOffset: 1,
+	});
+	
 	this.pflButton = new components.Button({
-		midi: [0x90 + midiChannel, 0x1B],
+		midi: [0x90 + channel, 0x1B],
+		off: 0x01,
 		key: 'pfl',
 		type: components.Button.prototype.types.toggle,
 	});
@@ -89,50 +131,76 @@ MixtrackProFX.Deck = function(deckNumber, midiChannel){
 	});
 	
 	this.volume = new components.Pot({
-		midi: [0xB0 + midiChannel, 0x1c],
+		midi: [0xB0 + channel, 0x1C],
 		inKey: 'volume',
 	});
 	
-	this.EqEffect = function(group, in_key){
+	this.EqEffectKnob = function(group, inKey, fxKey, filterKnob){
+		this.unshiftGroup = group;
+		this.unshiftKey = inKey;
+		this.fxKey = fxKey;
+		
+		if(filterKnob) {
+			this.shiftKey = 'super1';
+		}
+		
+		this.ignoreNext = null;
+		
 		components.Pot.call(this, {
 			group: group,
-			inKey: in_key,
+			inKey: inKey,
 		});
 	};
-	this.EqEffect.prototype = new components.Pot();
+	this.EqEffectKnob.prototype = new components.Pot({
+	});
 	
-	this.treble = new this.EqEffect('[EqualizerRack1_' + this.currentDeck + '_Effect1]', 'parameter3');
-	this.mid = new this.EqEffect('[EqualizerRack1_' + this.currentDeck + '_Effect1]', 'parameter2');
-	this.bass = new this.EqEffect('[EqualizerRack1_' + this.currentDeck + '_Effect1]', 'parameter1');
+	this.treble = new this.EqEffectKnob('[EqualizerRack1_' + this.currentDeck + '_Effect1]', 'parameter3', 'parameter3');
+	this.mid = new this.EqEffectKnob('[EqualizerRack1_' + this.currentDeck + '_Effect1]', 'parameter2', 'parameter4');
+	this.bass = new this.EqEffectKnob('[EqualizerRack1_' + this.currentDeck + '_Effect1]', 'parameter1', 'parameter5');
 	
-	this.filter = new this.EqEffect('[QuickEffectRack1_' + this.currentDeck + ']', 'super1', true);
-	this.gain = new this.EqEffect(this.currentDeck, 'pregain');
+	this.filter = new this.EqEffectKnob(
+		'[QuickEffectRack1_' + this.currentDeck + ']',
+		'super1',
+		'parameter1',
+		true
+	);
+	
+	this.gain = new this.EqEffectKnob(
+		this.currentDeck,
+		'pregain',
+		'parameter2'
+	);
 	
 	this.pitch = new components.Pot({
 		inKey: 'rate',
 		invert: true,
 	});
 	
-	this.hotcue = new components.ComponentContainer();
+	this.hotcueButton = new components.ComponentContainer();
 	
 	for(var i = 1; i <= 4; i++){
-		this.hotcue[i] = new components.HotcueButton({
-			midi: [0x94 + midiChannel, 0x14 + i - 1],
+		this.hotcueButton[i] = new components.HotcueButton({
+			midi: [0x94 + channel, 0x14 + i - 1],
 			number: i,
 			group: this.currentDeck,
+			sendShifted: true,
+            shiftControl: true,
+            shiftOffset: 8,
 		});
 	}
 	
 	this.shiftButton = new components.Button({
-		midi: [0x90 + midiChannel, 0x20, 0x80 + midiChannel, 0x20],
+		midi: [0x90 + channel, 0x20, 0x80 + channel, 0x20],
 		type: components.Button.prototype.types.powerWindow,
 		state: false,
 		inToggle: function(){
 			this.state=!this.state;
 			if(this.state){
 				instance.shift();
+				MixtrackProFX.browse.shift();
 			} else {
 				instance.unshift();
+				MixtrackProFX.browse.unshift();
 			}
 		},
 	});
@@ -145,6 +213,9 @@ MixtrackProFX.Deck = function(deckNumber, midiChannel){
 };
 MixtrackProFX.Deck.prototype = new components.Deck();
 
+//
+//	browse
+//
 MixtrackProFX.Browse = function(){
 	this.knob = new components.Encoder({
 		group: '[Library]',
@@ -156,23 +227,41 @@ MixtrackProFX.Browse = function(){
 				engine.setParameter(this.group, this.inKey + 'Up', 1);
 			}
 		},
+		unshift: function() {
+			this.inKey = 'Move';
+		},
+		shift: function() {
+			this.inKey = 'Scroll';
+		},
 	});
 
 	this.button = new components.Button({
 		group: '[Library]',
 		inKey: 'GoToItem',
+		unshift: function() {
+			this.inKey = 'GoToItem';
+		},
+		shift: function() {
+			this.inKey = 'MoveFocusForward';
+		},
 	});
 };
 MixtrackProFX.Browse.prototype = new components.ComponentContainer();
 
-MixtrackProFX.Headphone = function(){
-	this.gain = new components.Pot({
-		group: '[Master]',
-		inKey: 'headGain',
-	});
+//
+//
+//
+MixtrackProFX.HeadGain = function(){
+	components.Pot.call(this);
 };
-MixtrackProFX.Headphone.prototype = new components.ComponentContainer();
+MixtrackProFX.HeadGain.prototype = new components.Pot({
+	group: '[Master]',
+	inKey: 'headGain',
+});
 
+//
+//
+//
 MixtrackProFX.wheel = [];
 MixtrackProFX.wheelToggle = function(channel, control, value, status, group){
 	if(value != 0x7F){
@@ -190,6 +279,9 @@ MixtrackProFX.wheelToggle = function(channel, control, value, status, group){
 	midi.sendShortMsg(0x90 | channel, 0x07, onOff);
 };
 
+//
+//
+//
 MixtrackProFX.scratch_timer = [];
 MixtrackProFX.scratch_tick = [];
 MixtrackProFX.startScratchTimer = function(deck){
@@ -247,6 +339,9 @@ MixtrackProFX.scratchDisable = function(deck){
 	engine.scratchDisable(deck, false);
 };
 
+//
+//
+//
 MixtrackProFX.scratch_direction = [null, null, null];
 MixtrackProFX.scratch_accumulator = [0, 0, 0];
 MixtrackProFX.last_scratch_tick = [0, 0, 0];
@@ -324,6 +419,9 @@ MixtrackProFX.wheelTurn = function(channel, control, value, status, group){
 	}
 };
 
+//
+//
+//
 MixtrackProFX.touching = [false, false, false];
 MixtrackProFX.searching = [false, false, false];
 MixtrackProFX.wheelTouch = function(channel, control, value, status, group){
@@ -356,4 +454,28 @@ MixtrackProFX.wheelTouch = function(channel, control, value, status, group){
 	else {
 		MixtrackProFX.startScratchTimer(deck);
 	}
+};
+
+//
+//
+//
+MixtrackProFX.vuCallback = function(value, group, control) {
+	var level = value * 90;
+	
+	if(engine.getValue('[Channel1]', 'pfl')
+		|| engine.getValue('[Channel2]', 'pfl'))
+	{		
+		if (group == '[Channel1]') {
+			midi.sendShortMsg(0xB0, 0x1F, level);
+		}
+        else if (group == '[Channel2]') {
+			midi.sendShortMsg(0xB1, 0x1F, level);
+		}
+	}
+	else if (group == '[Channel1]') {
+		midi.sendShortMsg(0xB0, 0x1F, level);
+    }
+    else if (group == '[Channel2]') {
+		midi.sendShortMsg(0xB1, 0x1F, level);
+    }
 };

@@ -24,7 +24,7 @@ Numark Mixtrack Pro FX mapping for Mixxx 2.2.4
 17. ~~Pitch Bend Up~~
 18. Pitch Fader
 19. ~~Beats Multiplier~~
-20. ~~FX Wet/Dry Knob~~
+20. FX Wet/Dry Knob
 21. ~~Software FX~~
   - ~~HPF~~
   - ~~LPF~~
@@ -32,7 +32,7 @@ Numark Mixtrack Pro FX mapping for Mixxx 2.2.4
   - ~~Echo~~
   - ~~Reverb~~
   - ~~Phaser~~
-22. ~~FX On/Off~~
+22. FX On/Off
 23. ~~Tap BPM~~
 24. Platter/Jog Wheel
   - Pitch
@@ -47,6 +47,6 @@ Numark Mixtrack Pro FX mapping for Mixxx 2.2.4
 32. ~~Fader Cuts~~
 33. ~~Sampler~~
 34. Pads
-35. ~~Loop On/Off~~
-36. ~~Loop 1/2~~
-37. ~~Loop x2~~
+35. Loop On/Off
+36. Loop 1/2
+37. Loop x2
